@@ -1,0 +1,32 @@
+root = true
+
+[*.cs]
+# IDE 스타일 제안 끄기 (컬렉션 초기화 단순화 등)
+dotnet_analyzer_diagnostic.category-Style.severity = none
+
+# 불필요한 using 제안
+dotnet_diagnostic.IDE0005.severity = none
+
+# 컬렉션 초기화 단순화
+dotnet_diagnostic.IDE0028.severity = none
+dotnet_diagnostic.IDE0300.severity = none
+dotnet_diagnostic.IDE0301.severity = none
+dotnet_diagnostic.IDE0302.severity = none
+dotnet_diagnostic.IDE0303.severity = none
+dotnet_diagnostic.IDE0304.severity = none
+dotnet_diagnostic.IDE0305.severity = none
+
+# var 사용 제안
+dotnet_diagnostic.IDE0007.severity = none
+dotnet_diagnostic.IDE0008.severity = none
+
+# 객체 초기화 단순화
+dotnet_diagnostic.IDE0017.severity = none
+
+# 람다 단순화
+dotnet_diagnostic.IDE0039.severity = none
+
+# null 체크 단순화
+dotnet_diagnostic.IDE0029.severity = none
+dotnet_diagnostic.IDE0030.severity = none
+dotnet_diagnostic.IDE0031.severity = none
