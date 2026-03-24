@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="CustomEmulator/EmulatorEditor.csproj" />
+  <Project Path="EmulatorEditor/EmulatorEditor.csproj" />
   <Project Path="Emulator/Emulator.csproj" />
   <Project Path="Shared/Shared.csproj" />
 </Solution>
