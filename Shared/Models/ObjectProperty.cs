@@ -23,4 +23,8 @@ public class ObjectProperty
     /// <summary>button type only — JSON payload to publish when clicked</summary>
     [JsonPropertyName("on_click_payload")]
     public string OnClickPayload { get; set; } = "{}";
+
+    /// <summary>true이면 Emulator UI에서 값 변경 불가 (표시 전용)</summary>
+    [JsonPropertyName("readonly")]
+    public bool IsReadOnly { get; set; } = false;
 }

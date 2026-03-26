@@ -176,11 +176,10 @@
                                                     <StackPanel Grid.Column="2">
                                                         <TextBlock Style="{StaticResource Label}">
                                                             <Run Text="Target"/>
-                                                            <Run Text=" (default: UnitId)" Foreground="#585B70"/>
+                                                            <Run Text=" (UnitId)" Foreground="#585B70"/>
                                                         </TextBlock>
                                                         <TextBox x:Name="XcpTargetBox" Style="{StaticResource InputBox}"
-                                                                 ToolTip="비워두면 UnitId를 사용합니다"
-                                                                 TextChanged="XcpTargetBox_TextChanged"/>
+                                                                 IsReadOnly="True" Opacity="0.6"/>
                                                     </StackPanel>
                                                 </Grid>
 
@@ -325,12 +324,45 @@
                                            Style="{StaticResource Label}"/>
                                 <TextBox x:Name="ConnectionUrlBox" Style="{StaticResource InputBox}"/>
                                 <StackPanel x:Name="RestListenPathPanel" Visibility="Collapsed">
+                                    <!-- Listen Path (읽기 전용) -->
                                     <TextBlock Style="{StaticResource Label}">
                                         <Run Text="Listen Path"/>
-                                        <Run Text=" (inbound, e.g. /robot/1)" Foreground="#585B70"/>
+                                        <Run Text=" (UnitId)" Foreground="#585B70"/>
                                     </TextBlock>
                                     <TextBox x:Name="RestListenPathBox" Style="{StaticResource InputBox}"
-                                             Text="/robot/1"/>
+                                             IsReadOnly="True" Opacity="0.6"/>
+                                    <TextBlock x:Name="RestListenHint" FontSize="10"
+                                               Foreground="#585B70" FontFamily="Consolas"
+                                               Margin="0,2,0,0"/>
+
+                                    <!-- Commands -->
+                                    <TextBlock Text="COMMANDS" Style="{StaticResource SectionLabel}"
+                                               Margin="0,10,0,4"/>
+                                    <DockPanel Margin="0,0,0,6">
+                                        <Button Content="+ Add" Style="{StaticResource SmallButton}"
+                                                DockPanel.Dock="Right" Click="AddRestCmd_Click"/>
+                                        <TextBox x:Name="NewRestCmdBox" Style="{StaticResource InputBox}"
+                                                 FontFamily="Consolas" FontSize="11" Margin="0,0,4,0"/>
+                                    </DockPanel>
+                                    <!-- 체크박스 그리드 (predefined) -->
+                                    <UniformGrid x:Name="RestCmdGrid" Columns="3" Margin="0,0,0,4"/>
+                                    <!-- 커스텀 커맨드 목록 -->
+                                    <ItemsControl x:Name="RestCustomCmdList" Margin="0,2,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="0,2">
+                                                    <Button Content="✕" DockPanel.Dock="Right"
+                                                            Background="Transparent" BorderThickness="0"
+                                                            Foreground="#F38BA8" FontSize="10" Padding="4,0"
+                                                            Tag="{Binding}"
+                                                            Click="RemoveRestCmd_Click"/>
+                                                    <TextBlock Text="{Binding}" Foreground="#CBA6F7"
+                                                               FontSize="11" FontFamily="Consolas"
+                                                               VerticalAlignment="Center"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                             </StackPanel>
 
@@ -365,11 +397,14 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="52"/>
                                     <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="28"/>
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="1" Text="Name"    Style="{StaticResource HeaderLabel}"/>
                                 <TextBlock Grid.Column="2" Text="Type"    Style="{StaticResource HeaderLabel}" Margin="2,0"/>
                                 <TextBlock Grid.Column="3" Text="Default" Style="{StaticResource HeaderLabel}" Margin="2,0"/>
+                                <TextBlock Grid.Column="4" Text="RO"      Style="{StaticResource HeaderLabel}" Margin="2,0"
+                                           ToolTip="ReadOnly — Emulator UI에서 값 변경 불가"/>
                             </Grid>
 
                             <ItemsControl x:Name="PropertyList">
@@ -383,6 +418,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="52"/>
                                                     <ColumnDefinition Width="70"/>
+                                                    <ColumnDefinition Width="28"/>
                                                     <ColumnDefinition Width="20"/>
                                                 </Grid.ColumnDefinitions>
                                                 <CheckBox Grid.Column="0" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center"/>
@@ -431,7 +467,11 @@
                                                          Background="#313244" Foreground="#F9E2AF"
                                                          BorderBrush="#45475A" Padding="4,2"
                                                          Visibility="{Binding IsValueEditable, Converter={StaticResource BoolToVis}}"/>
-                                                <Button Grid.Column="4" Content="×"
+                                                <CheckBox Grid.Column="4"
+                                                          IsChecked="{Binding IsReadOnly}"
+                                                          VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                          ToolTip="ReadOnly — Emulator UI에서 값 변경 불가"/>
+                                                <Button Grid.Column="5" Content="×"
                                                         Style="{StaticResource DeleteButton}"
                                                         Padding="2,0" FontSize="13"
                                                         VerticalAlignment="Center"

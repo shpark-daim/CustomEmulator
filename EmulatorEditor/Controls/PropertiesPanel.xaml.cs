@@ -11,7 +11,8 @@ public partial class PropertiesPanel : UserControl
 {
     private EmulatorObject? _obj;
     private bool _loading;
-    private bool _xcpTargetFollowsUnitId;
+    private readonly Dictionary<string, CheckBox>  _restCmdCheckboxes  = new();
+    private ObservableCollection<string>           _restCustomCmds     = new();
 
     public event Action? BeforeApply;
     public event Action? ObjectChanged;
@@ -89,7 +90,8 @@ public partial class PropertiesPanel : UserControl
 
         // URL section
         ConnectionUrlBox.Text  = obj.Communication.ConnectionUrl;
-        RestListenPathBox.Text = obj.Communication.RestListenPath;
+        RestListenPathBox.Text = $"/{obj.UnitId}";
+        UpdateRestSection(obj.UnitId, obj.Communication.RestCommands);
 
         // Modbus fields
         ModbusHostBox.Text   = obj.Communication.ModbusHost;
@@ -103,8 +105,7 @@ public partial class PropertiesPanel : UserControl
         XcpPrefixBox.Text       = xcp.Prefix;
         XcpIdentifierBox.Text   = xcp.Identifier;
         XcpVersionBox.Text      = xcp.Version;
-        _xcpTargetFollowsUnitId = string.IsNullOrEmpty(xcp.Target);
-        XcpTargetBox.Text       = _xcpTargetFollowsUnitId ? obj.UnitId : xcp.Target;
+        XcpTargetBox.Text = obj.UnitId;
         var opts = xcp.OptionalCommands;
         XcpStart.IsChecked      = opts.Contains("start");
         XcpStop.IsChecked       = opts.Contains("stop");
@@ -137,6 +138,7 @@ public partial class PropertiesPanel : UserControl
                     item.OnClickTopic   = saved.OnClickTopic;
                     item.OnClickPayload = saved.OnClickPayload;
                 }
+                item.IsReadOnly = saved.IsReadOnly;
             }
             _properties.Add(item);
         }
@@ -149,7 +151,8 @@ public partial class PropertiesPanel : UserControl
                 Type         = kv.Value.Type,
                 DefaultValue = ValueToString(kv.Value),
                 IsEnabled    = true,
-                IsPredefined = false
+                IsPredefined = false,
+                IsReadOnly   = kv.Value.IsReadOnly,
             };
             if (kv.Value.Type == "enum")
                 item.EnumValuesRaw = string.Join(", ", kv.Value.EnumValues);
@@ -166,6 +169,60 @@ public partial class PropertiesPanel : UserControl
     }
 
     // ── Protocol visibility ────────────────────────────────────────────────────
+    private static readonly string[] RestCmdNames =
+        ["start", "stop", "pause", "resume", "abort", "end", "status", "sync", "auto", "manual"];
+
+    private void UpdateRestSection(string unitId, List<string>? enabledCmds)
+    {
+        if (RestListenHint == null || RestCmdGrid == null) return;
+
+        var path = string.IsNullOrWhiteSpace(unitId) ? "/" : $"/{unitId.TrimStart('/')}";
+        RestListenHint.Text = $"← http://localhost:5555{path}";
+
+        // predefined 체크박스 재구성
+        RestCmdGrid.Children.Clear();
+        _restCmdCheckboxes.Clear();
+        foreach (var cmd in RestCmdNames)
+        {
+            var cb = new CheckBox
+            {
+                Content    = cmd,
+                IsChecked  = enabledCmds == null || enabledCmds.Contains(cmd),
+                Margin     = new System.Windows.Thickness(0, 2, 8, 2),
+                Foreground = System.Windows.Media.Brushes.White,
+                FontSize   = 11,
+            };
+            _restCmdCheckboxes[cmd] = cb;
+            RestCmdGrid.Children.Add(cb);
+        }
+
+        // 커스텀 커맨드 (predefined에 없는 것들)
+        _restCustomCmds = new ObservableCollection<string>(
+            enabledCmds?.Where(c => !RestCmdNames.Contains(c)) ?? []);
+        RestCustomCmdList.ItemsSource = _restCustomCmds;
+    }
+
+    private void AddRestCmd_Click(object s, RoutedEventArgs e)
+    {
+        var cmd = NewRestCmdBox.Text.Trim().ToLower();
+        if (string.IsNullOrEmpty(cmd) || RestCmdNames.Contains(cmd) || _restCustomCmds.Contains(cmd)) return;
+        _restCustomCmds.Add(cmd);
+        NewRestCmdBox.Clear();
+    }
+
+    private void RemoveRestCmd_Click(object s, RoutedEventArgs e)
+    {
+        if (s is Button btn && btn.Tag is string cmd)
+            _restCustomCmds.Remove(cmd);
+    }
+
+    private List<string> BuildRestCommands()
+        => _restCmdCheckboxes
+            .Where(kv => kv.Value.IsChecked == true)
+            .Select(kv => kv.Key)
+            .Concat(_restCustomCmds)
+            .ToList();
+
     private void ApplyProtocolSection(string protocol)
     {
         MqttSection.Visibility         = protocol == "mqtt"   ? Visibility.Visible : Visibility.Collapsed;
@@ -232,7 +289,7 @@ public partial class PropertiesPanel : UserControl
                         Prefix           = XcpPrefixBox.Text,
                         Identifier       = XcpIdentifierBox.Text,
                         Version          = XcpVersionBox.Text,
-                        Target           = XcpTargetBox.Text,
+                        Target           = "",   // 런타임에 UnitId 사용
                         OptionalCommands = BuildXcpOptionalCommands()
                     }
                     : null;
@@ -244,7 +301,8 @@ public partial class PropertiesPanel : UserControl
                 break;
             case "rest":
                 _obj.Communication.ConnectionUrl  = ConnectionUrlBox.Text;
-                _obj.Communication.RestListenPath = RestListenPathBox.Text;
+                _obj.Communication.RestListenPath = $"/{_obj.UnitId}";
+                _obj.Communication.RestCommands   = BuildRestCommands();
                 break;
             default:
                 _obj.Communication.ConnectionUrl = ConnectionUrlBox.Text;
@@ -261,6 +319,7 @@ public partial class PropertiesPanel : UserControl
                 EnumValues     = prop.Type == "enum"   ? prop.EnumValuesList : new(),
                 OnClickTopic   = prop.Type == "button" ? prop.OnClickTopic   : "",
                 OnClickPayload = prop.Type == "button" ? prop.OnClickPayload : "{}",
+                IsReadOnly     = prop.IsReadOnly,
             };
         }
 
@@ -348,19 +407,14 @@ public partial class PropertiesPanel : UserControl
         if (_obj != null) DeleteRequested?.Invoke(_obj);
     }
 
-    // ── UnitId → XcpTarget 연동 ────────────────────────────────────────────────
+    // ── UnitId → XcpTarget / RestListenPath 강제 동기화 ──────────────────────
     private void UnitIdBox_TextChanged(object s, TextChangedEventArgs e)
     {
         if (_loading) return;
-        if (_xcpTargetFollowsUnitId)
-            XcpTargetBox.Text = UnitIdBox.Text;
-    }
-
-    private void XcpTargetBox_TextChanged(object s, TextChangedEventArgs e)
-    {
-        if (_loading) return;
-        // Target이 비워지면 다시 UnitId를 따라가도록 설정
-        _xcpTargetFollowsUnitId = string.IsNullOrEmpty(XcpTargetBox.Text);
+        var unitId = UnitIdBox.Text;
+        XcpTargetBox.Text      = unitId;
+        RestListenPathBox.Text = $"/{unitId}";
+        UpdateRestSection(unitId, null);
     }
 
     // ── XCP ────────────────────────────────────────────────────────────────────
