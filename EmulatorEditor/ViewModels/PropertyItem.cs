@@ -13,6 +13,7 @@ public class PropertyItem : INotifyPropertyChanged
     private string _enumValuesRaw = "";     // comma-separated; used when Type == "enum"
     private string _onClickTopic = "";      // used when Type == "button"
     private string _onClickPayload = "{}";  // used when Type == "button"
+    private bool _isReadOnly = false;
 
     public string Key
     {
@@ -88,6 +89,12 @@ public class PropertyItem : INotifyPropertyChanged
     {
         get => _onClickPayload;
         set { _onClickPayload = value; OnPropertyChanged(); }
+    }
+
+    public bool IsReadOnly
+    {
+        get => _isReadOnly;
+        set { _isReadOnly = value; OnPropertyChanged(); }
     }
 
     // ── Computed helpers ───────────────────────────────────────────────────────

@@ -23,9 +23,13 @@ public class CommunicationConfig
     [JsonPropertyName("connection_url")]
     public string ConnectionUrl { get; set; } = "";
 
-    /// <summary>REST only — inbound path this object listens on  e.g. "/robot/1"</summary>
+    /// <summary>REST only — inbound path this object listens on  e.g. "/robot1"</summary>
     [JsonPropertyName("rest_listen_path")]
     public string RestListenPath { get; set; } = "";
+
+    /// <summary>REST only — 활성화할 커맨드 목록. null 이면 전체 활성화.</summary>
+    [JsonPropertyName("rest_commands")]
+    public List<string>? RestCommands { get; set; } = null;
 
     // ── XCP ────────────────────────────────────────────────
     [JsonPropertyName("uses_xcp")]
