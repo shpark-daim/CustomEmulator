@@ -1,0 +1,287 @@
+{
+  "version": "1.0",
+  "brokers": {
+    "local": {
+      "protocol": "mqtt",
+      "host": "localhost",
+      "port": 1883
+    }
+  },
+  "objects": [
+    {
+      "unit_id": "r1",
+      "machine_id": "Robot 1",
+      "type": "Robot",
+      "position": {
+        "x": 44,
+        "y": 72
+      },
+      "communication": {
+        "protocol": "mqtt",
+        "broker_ref": "local",
+        "subscribe_topics": [],
+        "publish_topics": [],
+        "connection_url": "",
+        "rest_listen_path": "",
+        "rest_commands": null,
+        "uses_xcp": true,
+        "xcp": {
+          "prefix": "xflow",
+          "identifier": "rcp",
+          "version": "v1",
+          "target": "r1",
+          "optional_commands": [
+            "start",
+            "stop",
+            "pause",
+            "resume",
+            "abort",
+            "end"
+          ]
+        },
+        "modbus_host": "localhost",
+        "modbus_port": 502,
+        "modbus_unit_id": 1
+      },
+      "properties": {
+        "Mode": {
+          "type": "enum",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "State": {
+          "type": "enum",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "Seq": {
+          "type": "int",
+          "value": 0,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "EventSeq": {
+          "type": "int",
+          "value": 0,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "CompleteReason": {
+          "type": "string",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "JobId": {
+          "type": "string",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "RecipeId": {
+          "type": "string",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "ProductResultOk": {
+          "type": "bool",
+          "value": false,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "InfiniteRun": {
+          "type": "bool",
+          "value": false,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "Complete": {
+          "type": "button",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        }
+      }
+    },
+    {
+      "unit_id": "r2",
+      "machine_id": "Robot 2",
+      "type": "Robot",
+      "position": {
+        "x": 182,
+        "y": 72
+      },
+      "communication": {
+        "protocol": "mqtt",
+        "broker_ref": "local",
+        "subscribe_topics": [
+          {
+            "topic": "nota/events/site001/narrative",
+            "parse_fields": [
+              {
+                "key": "event_id",
+                "type": "string"
+              },
+              {
+                "key": "channel_id",
+                "type": "string"
+              },
+              {
+                "key": "evnet_type",
+                "type": "string"
+              },
+              {
+                "key": "status",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "publish_topics": [],
+        "connection_url": "",
+        "rest_listen_path": "",
+        "rest_commands": null,
+        "uses_xcp": false,
+        "xcp": null,
+        "modbus_host": "localhost",
+        "modbus_port": 502,
+        "modbus_unit_id": 1
+      },
+      "properties": {
+        "Seq": {
+          "type": "int",
+          "value": 0,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "EventSeq": {
+          "type": "int",
+          "value": 0,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        }
+      }
+    },
+    {
+      "unit_id": "r3",
+      "machine_id": "Robot 3",
+      "type": "Robot",
+      "position": {
+        "x": 329,
+        "y": 74
+      },
+      "communication": {
+        "protocol": "rest",
+        "broker_ref": "local",
+        "subscribe_topics": [],
+        "publish_topics": [],
+        "connection_url": "https://webhook.site/14bd6f43-f210-42f0-ab3b-a7f784e33123",
+        "rest_listen_path": "/r3",
+        "rest_commands": [
+          "start",
+          "stop",
+          "pause",
+          "resume",
+          "abort",
+          "end",
+          "status",
+          "sync",
+          "auto",
+          "manual"
+        ],
+        "uses_xcp": false,
+        "xcp": null,
+        "modbus_host": "localhost",
+        "modbus_port": 502,
+        "modbus_unit_id": 1
+      },
+      "properties": {
+        "Mode": {
+          "type": "enum",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "State": {
+          "type": "enum",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "Seq": {
+          "type": "int",
+          "value": 0,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "EventSeq": {
+          "type": "int",
+          "value": 0,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "CompleteReason": {
+          "type": "string",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "JobId": {
+          "type": "string",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "RecipeId": {
+          "type": "string",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "ProductResultOk": {
+          "type": "bool",
+          "value": false,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "InfiniteRun": {
+          "type": "bool",
+          "value": false,
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        },
+        "Complete": {
+          "type": "button",
+          "value": "",
+          "enum_values": [],
+          "on_click_topic": "",
+          "on_click_payload": "{}"
+        }
+      }
+    }
+  ]
+}

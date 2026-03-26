@@ -1,0 +1,65 @@
+<Window x:Class="Emulator.Controls.SettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="설정"
+        Background="#1E1E2E" Foreground="#CDD6F4"
+        Width="320" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" ShowInTaskbar="False">
+
+    <StackPanel Margin="20,16,20,20">
+
+        <TextBlock Text="설정" FontSize="13" FontWeight="Bold"
+                   Foreground="#CDD6F4" Margin="0,0,0,14"/>
+
+        <!-- REST -->
+        <TextBlock Text="REST" FontSize="10" FontWeight="Bold"
+                   Foreground="#585B70" Margin="0,0,0,6"/>
+        <Grid Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Port" Foreground="#6C7086" FontSize="11" VerticalAlignment="Center"/>
+            <TextBox x:Name="RestPortBox" Grid.Column="1"
+                     Background="#313244" Foreground="#CDD6F4"
+                     BorderBrush="#45475A" Padding="6,4" FontFamily="Consolas" FontSize="11"/>
+        </Grid>
+
+        <Rectangle Height="1" Fill="#313244" Margin="0,0,0,14"/>
+
+        <!-- MQTT -->
+        <TextBlock Text="MQTT" FontSize="10" FontWeight="Bold"
+                   Foreground="#585B70" Margin="0,0,0,6"/>
+        <Grid Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Broker Host" Foreground="#6C7086" FontSize="11" VerticalAlignment="Center"/>
+            <TextBox x:Name="MqttBrokerHostBox" Grid.Column="1"
+                     Background="#313244" Foreground="#CDD6F4"
+                     BorderBrush="#45475A" Padding="6,4" FontFamily="Consolas" FontSize="11"/>
+        </Grid>
+        <Grid Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Broker Port" Foreground="#6C7086" FontSize="11" VerticalAlignment="Center"/>
+            <TextBox x:Name="MqttBrokerPortBox" Grid.Column="1"
+                     Background="#313244" Foreground="#CDD6F4"
+                     BorderBrush="#45475A" Padding="6,4" FontFamily="Consolas" FontSize="11"/>
+        </Grid>
+
+        <!-- 확인 / 취소 -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="취소" Width="64" Padding="0,6" Margin="0,0,8,0"
+                    Click="Cancel_Click"/>
+            <Button Content="확인" Width="64" Padding="0,6"
+                    Background="#89B4FA" Foreground="#1E1E2E"
+                    Click="Confirm_Click"/>
+        </StackPanel>
+
+    </StackPanel>
+</Window>
