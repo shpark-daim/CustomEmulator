@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+<PropertyGroup Condition="'$(Configuration)'=='Release'">
+	<DebugType>none</DebugType>
+	<DebugSymbols>false</DebugSymbols>
+	<CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
+	<CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+	<AllowedReferenceRelatedFileExtensions>
+		.allowedextension
+	</AllowedReferenceRelatedFileExtensions>
+</PropertyGroup>
+
 </Project>
