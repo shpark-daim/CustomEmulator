@@ -102,7 +102,7 @@ public class EditorViewModel : INotifyPropertyChanged
     public static readonly (string Key, string Type, string Default)[] PredefinedProps =
     [
         ("Mode",            "enum",   ""),
-        ("State",           "enum",   ""),
+        ("State",           "string", "I"),
         ("Seq",             "int",    "0"),
         ("EventSeq",        "int",    "0"),
         ("CompleteReason",  "string", ""),
