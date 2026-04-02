@@ -52,8 +52,8 @@
           "on_click_payload": "{}"
         },
         "State": {
-          "type": "enum",
-          "value": "",
+          "type": "string",
+          "value": "I",
           "enum_values": [],
           "on_click_topic": "",
           "on_click_payload": "{}"
@@ -219,8 +219,8 @@
           "on_click_payload": "{}"
         },
         "State": {
-          "type": "enum",
-          "value": "",
+          "type": "string",
+          "value": "I",
           "enum_values": [],
           "on_click_topic": "",
           "on_click_payload": "{}"
